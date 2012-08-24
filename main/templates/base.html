@@ -13,7 +13,7 @@
     <div class="container-fluid">
       <div class="row-fluid">
         <div id="sidebar" class="span2">
-          <img id="lock" src="{{ STATIC_URL }}main/images/lock.png">
+          <a href="{% url index %}"><img id="lock" src="{{ STATIC_URL }}main/images/lock.png"></a>
           <a href="{% url map %}" class="btn btn-primary btn-large">
             Explorar el Mapa
           </a>
