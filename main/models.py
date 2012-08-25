@@ -9,6 +9,7 @@ class Credit(models.Model):
     cancel_reason = models.CharField(max_length=300, blank=True)
     supposed_by = models.CharField(max_length=300, blank=True)
     taxpayer_type = models.CharField(max_length=300, blank=True)
+    entity = models.CharField(max_length=300, blank=True)
     sector = models.CharField(max_length=300, blank=True)
 
 class DataBaseFile(models.Model):

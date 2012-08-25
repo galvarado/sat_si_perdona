@@ -9,6 +9,8 @@ def import_file(file_name):
     sh = book.sheet_by_index(0)
     header_row = sh.row(HEADER_ROW)
 
+    #print header_row
+    
     if(sh.nrows > 1):
         Credit.objects.all().delete()
         for rx in range(1, sh.nrows):
@@ -23,8 +25,9 @@ def import_file(file_name):
                 cancel_reason=sh.cell_value(rowx=rx, colx=3),
                 supposed_by=sh.cell_value(rowx=rx, colx=4),
                 taxpayer_type=sh.cell_value(rowx=rx, colx=5),
-                sector=sh.cell_value(rowx=rx, colx=6))
+                entity=sh.cell_value(rowx=rx, colx=6),
+                sector=sh.cell_value(rowx=rx, colx=7))
                 r.save()
                 print 'Insertando... ' + str(r.id)
-
-import_file('creditos.xlsx')
+    
+import_file('/tmp/creditos.xlsx')
