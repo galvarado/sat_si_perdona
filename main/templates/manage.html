@@ -1,0 +1,11 @@
+{% extends 'base_manage.html' %} 
+{% block main-content %}
+<div class="hero-unit">
+<h1>Panel de Administración</h1>
+{% if db_file %}
+    <h2>Usando {{ db_file.0 }} como base de datos</h2>
+    {% else %}
+    <h2>La aplicación no tiene ninguna base de datos</h2>
+    {% endif %}
+</div>
+{% endblock main-content %}

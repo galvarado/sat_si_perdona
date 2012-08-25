@@ -9,8 +9,14 @@ urlpatterns = patterns('main.views',
     url(r'^map/?$', 'map', name='map'),
     url(r'^search/?$', 'search', name='search'),
     url(r'^search/get_credits/?$', 'get_credits', name='get_credits'),
+    url(r'^login/?$', 'login', name='login'),
+    url(r'^logout/?$', 'logout', name='logout'),
+    url(r'^manage/?$', 'manage', name='manage'),
+    url(r'^change_db/?$', 'change_db', name='change_db'),
     # Urls to django admin
     url(r'^admin/', include(admin.site.urls)),
+    # Django registration
+    url(r'^accounts/', include('registration.backends.default.urls')),
 )
 
 # Static files serve

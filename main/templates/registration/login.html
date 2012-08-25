@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Conoce a tu Diputado</title>
+    <link rel="stylesheet/less" href="{{ STATIC_URL }}main/less/style.less">
+    <script src="{{ STATIC_URL }}main/js/libs/less-1.3.0.min.js"></script>
+    <script>
+    var STATIC_URL = '{{ STATIC_URL }}';
+    </script>
+  </head>
+  <body>
+    <div id="login">
+      <div class="login-header">
+        <h2>Login</h2>
+      </div>
+      <div class="login-body">
+        <form action="{% url login %}" method="POST">
+        {% csrf_token%}
+          {% for field in form %}
+          <div class="form-control">
+            <label for="id_{{ field.name }}">{{ field.label }}:</label>
+            <div class="field-form">{{ field }}</div>
+            {% if field.errors %}
+            <div class="alert-error">
+              {% for error in field.errors %}
+              <p>{{ error }}</p>
+              {% endfor %}
+            </div>
+            {% endif %}
+          </div>
+          {% endfor %}
+          <div class="form-control">
+           <span for="id_remember_me">Recuerdame:</span>
+            <input type="checkbox" name="remember_me" id="remember_me" value="1" />
+          </div>
+      </div>
+      <div class="login-footer">
+        <button class="btn btn-primary btn-medium" data-toggle="button">Entrar</button>
+      </form>
+      </div>
+    </div>
+    <!-- Javascript libraries imports -->
+    {% block js %}
+    <script src="{{ STATIC_URL }}main/js/libs/jquery-1.7.2.min.js"></script>
+    <script src="{{ STATIC_URL }}main/js/libs/jquery.dataTables.min.js"></script>
+    <script src="{{ STATIC_URL }}main/js/libs/bootstrap/bootstrap.js"></script>
+    <script src="{{ STATIC_URL }}main/js/libs/bootstrap/dataTables.bootstrap-plugin.js"></script>
+    <script src="{{ STATIC_URL }}main/js/libs/ajax.csrf.js"></script>
+    <script src="{{ STATIC_URL }}main/js/libs/jquery.maphighlight.min.js"></script>
+    {% endblock js %}
+
+    {% block footer %}{% endblock footer %}
+  </body>
+</html>
