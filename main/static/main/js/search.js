@@ -27,4 +27,7 @@ $(function() {
       });
     }
   });
+  $('#specific-search').keyup(function(){
+    datatable.fnFilter($(this).val());
+  });
 });
