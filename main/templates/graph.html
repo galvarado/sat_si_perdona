@@ -1,0 +1,31 @@
+{% extends 'base.html' %} 
+{% block main-content %}
+<div class="hero-unit">
+  <h1>¿Sabías que el SAT cancela creditos, pero solo a algunos?</h1>
+  <h2>Consulta los créditos condonados por montos, motivo, tipo de persona, estado</h2>
+</div>
+  <input type="text" id="specific-search" placeholder="Escribe Monto, tipo de persona, estado, motivo de cancelación, etc"/>
+  <center>
+  <canvas id="cvs1" width="600" height="250">[No canvas support]</canvas>
+  </center>
+<script>
+  window.onload = function ()
+  {
+    var bar = new RGraph.Bar('cvs1', [5,4,1,6,8,5,3]);
+    bar.Set('chart.labels', ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']);
+    bar.Set('chart.gutter.left', 45);
+    bar.Set('chart.background.barcolor1', 'white');
+    bar.Set('chart.background.barcolor2', 'white');
+    bar.Set('chart.background.grid', true);
+    bar.Set('chart.colors', ['orange']);
+    bar.Set('chart.text.color', 'white');
+    bar.Set('chart.variant', '3d');
+    bar.Draw();
+
+  }
+</script>
+{% endblock main-content %}
+{% block js %}
+{{ block.super }}
+<script src="{{ STATIC_URL }}main/js/graph.js"></script>
+{% endblock js %}

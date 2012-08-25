@@ -62,6 +62,25 @@ def get_credits(request):
     }
     return HttpResponse(json.dumps(data))
 
+def get_graph_by_state(request):
+    response = 0
+    if request.method == 'POST' and request.is_ajax():
+        state = request.POST.get('state')
+        data = {
+            'response': 1,
+            'total_moral': 15,
+            'total_physic': 85,
+            'total_amount': '144343',
+            'state': state,
+        }
+        return HttpResponse(json.dumps(data))
+
+def graph(request):
+    '''
+    Show graph page
+    '''
+    return render_to_response('graph.html', RequestContext(request))
+
 def login(request):
     """
     Function to login an user
