@@ -20,9 +20,12 @@
           <a href="{% url search %}" class="btn btn-primary btn-large">
             Búsqueda Específica
           </a>
+          <!--a href="{% url graph %}" class="btn btn-primary btn-large">
+            Grafica los datos
+          </a>
           <a href="{% url index %}" class="btn btn-primary btn-large">
            Ayudanos a Difundir
-          </a>
+          </a-->
         </div>
         <div class="span10">
           {% block main-content %}{% endblock %}
@@ -37,6 +40,13 @@
     <script src="{{ STATIC_URL }}main/js/libs/jquery-ui-1.8.23.custom.min.js"></script>
     <script src="{{ STATIC_URL }}main/js/libs/ajax.csrf.js"></script>
     <script src="{{ STATIC_URL }}main/js/libs/jquery.maphighlight.min.js"></script>
+    <script src="{{ STATIC_URL }}main/js/libs/RGraph.bar.js"></script>
+    <script src="{{ STATIC_URL }}main/js/libs/RGraph.common.core.js"></script>
+    <script src="{{ STATIC_URL }}main/js/libs/RGraph.common.dynamic.js" ></script>
+    <script src="{{ STATIC_URL }}main/js/libs/RGraph.common.tooltips.js" ></script>
+    <script src="{{ STATIC_URL }}main/js/libs/RGraph.pie.js" ></script>
+    <script src="{{ STATIC_URL }}main/js/libs/RGraph.hbar.js" ></script>
+
     {% endblock js %}
 
     {% block footer %}

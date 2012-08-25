@@ -1,7 +1,7 @@
 {% extends 'base.html' %} 
 {% block main-content %}
 <div class="hero-unit">
-  <h1>¿Sabías que el SAT sí perdona?</h1>
+  <h1>Consulta los creditos por estado</h1>
   <h2>Muevete sobre los estados para conocer los creditos cancelados.</h2>
 </div>
 <map name="mexico">
@@ -40,6 +40,22 @@
 </map>
 <h2 id="info"></h2>
 <img id="map" src="{{ STATIC_URL }}main/images/mx_map.png" usemap="#mexico" title="Mexico">
+<div id="graph-tabs">
+  <ul>
+    <li><a href="#tabs-1">Tipo de contribuyentes</a></li>
+    <li><a href="#tabs-2">Sectores</a></li>
+    <li><a href="#tabs-3">Otro</a></li>
+  </ul>
+  <div id="tabs-1">
+    <canvas id="cvs1" width="500" height="250">[No canvas support]</canvas>
+  </div>
+  <div id="tabs-2">
+    <canvas id="cvs2" width="500" height="250">[No canvas support]</canvas>
+  </div>
+  <div id="tabs-3">
+    <canvas id="cvs3" width="500" height="250">[No canvas support]</canvas>
+  </div>
+</div>
 {% endblock main-content %}
 {% block js %}
 {{ block.super }}
