@@ -29,5 +29,3 @@ def import_file(file_name):
                 sector=sh.cell_value(rowx=rx, colx=7))
                 r.save()
                 print 'Insertando... ' + str(r.id)
-    
-import_file('/tmp/creditos.xlsx')

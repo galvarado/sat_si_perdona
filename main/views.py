@@ -10,8 +10,9 @@ from django.contrib.auth import logout as auth_logout, login as auth_login
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
+from django.db.models import Avg, Max, Min, Count
 
-from main.models import DataBaseFile
+from main.models import DataBaseFile, Credit
 from main.forms import DataBaseFileForm
 import import_excel
 
@@ -35,30 +36,30 @@ def search(request):
 
 def get_credits(request):
     '''
-    Retrive deputies table
+    Retrive deputies table when user search in map
     '''
     aaData = []
-    start = 0
-    display_length = 0
-    end = 0
-    search = request.POST.get('sSearch')
-    users = []
-    count = 0
+    start = request.POST.get('iDisplayStart')
+    display_length = request.POST.get('iDisplayLength')
+    end = start + display_length
+    credits = Credit.objects.all()
+    count = credits.count()
 
-    for user in users[start:end]:
-        group = 'Sin asignar' if user.profile.group is None else user.profile.group.name
+    for credit in credits[start:end]:
         aaData.append([
-            user.username,
-            user.email,
-            group,
-            '<input type="checkbox" data-id="%s">' % user.pk,
+            '$%s' % str(credit.amount),
+            credit.cancel_reason,
+            credit.supposed_by,
+            credit.entity,
+            credit.sector,
+            
         ])
     data = {
-        "iTotalRecords": count,
-        "iDisplayStart": start,
-        "iDisplayLength": display_length,
-        "iTotalDisplayRecords": count,
-        "aaData":aaData
+        'iTotalRecords': count,
+        'iDisplayStart': start,
+        'iDisplayLength': display_length,
+        'iTotalDisplayRecords': count,
+        'aaData':aaData
     }
     return HttpResponse(json.dumps(data))
 
@@ -66,14 +67,138 @@ def get_graph_by_state(request):
     response = 0
     if request.method == 'POST' and request.is_ajax():
         state = request.POST.get('state')
+
+        _query = "SELECT id, taxpayer_type, ROUND(COUNT(*) * 100 / (SELECT COUNT(*) FROM main_credit WHERE entity LIKE '%%" + state + "%%')) AS pct FROM main_credit WHERE entity LIKE '%%" + state + "%%' GROUP BY taxpayer_type;"
+        credits = Credit.objects.raw(_query)
+        total_amount = Credit.objects.filter(entity=state).aggregate(Count('amount'))
+        persons_type = []
+        persons_type_values = []
+        for credit in credits:
+            persons_type.append(credit.taxpayer_type)
+            persons_type_values.append(int(credit.pct))
+
+        _query = "SELECT id, sector, ROUND(SUM(amount)) AS amount FROM main_credit WHERE entity LIKE '%%"+state+"%%' GROUP BY sector;"
+        credits = Credit.objects.raw(_query)
+        sectors_name = []
+        sectors_values = []
+        for credit in credits:
+            sectors_name.append(credit.sector)
+            sectors_values.append(int(credit.amount))
+
+        _query = "SELECT id, cancel_reason, ROUND(COUNT(*) * 100 / (SELECT COUNT(*) FROM main_credit WHERE entity LIKE '%%"+state+"%%')) AS pct FROM main_credit WHERE entity LIKE '%%"+state+"%%' GROUP BY cancel_reason;"
+        credits = Credit.objects.raw(_query)
+        reasons_name = []
+        reasons_values = []
+        for credit in credits:
+            reasons_name.append(credit.cancel_reason)
+            reasons_values.append(int(credit.pct))
+
+
         data = {
             'response': 1,
-            'total_moral': 15,
-            'total_physic': 85,
-            'total_amount': '144343',
+            'persons_type': persons_type,
+            'persons_type_values': persons_type_values,
+            'sectors_name': sectors_name,
+            'sectors_values': sectors_values,
+            'reasons_name': reasons_name,
+            'reasons_values': reasons_values,
+            'total_amount': total_amount,
             'state': state,
         }
         return HttpResponse(json.dumps(data))
+
+def get_credits_search(request):
+    '''
+    Retrive deputies specific search
+    '''
+    aaData = []
+    start = request.POST.get('iDisplayStart')
+    display_length = request.POST.get('iDisplayLength')
+    end = display_length
+    search = request.POST.get('sSearch', None)
+    if search:
+
+        search = search.split(' ')
+
+        #fields = ('sex', 'name', 'lastname', 'party', 'election_type', 'entity', 'district', 'circunscription', 'phone', 'extension', 'email', 'twitter', 'commissions', 'bio', 'patrimony', 'answer', 'answer_why', 'suplent', 'status')
+        fields = ('amount', 'cancel_reason', 'supposed_by', 'taxpayer_type', 'entity', 'sector')
+
+        # Query to filter records
+        _query = """SELECT * FROM main_credit WHERE 1"""
+
+        args_to_append = []
+
+        for arg in search:
+            _query += """ AND ("""
+
+            i = 0
+
+            for field in fields:
+                if i > 0:
+                    _query += " OR "
+
+                _query += field + " LIKE '%%" + arg + "%%'"
+                #args_to_append.append(arg)
+                i = i + 1
+
+            _query += """)"""
+
+        _query += " LIMIT " + start + "," + end
+
+        #args_to_append.append(start)
+        #args_to_append.append(end)
+
+        credits = Credit.objects.raw(_query, args_to_append)
+
+        # Query to obtain total count
+        _query = """SELECT * FROM main_credit WHERE 1"""
+
+        for arg in search:
+            _query += """ AND ("""
+
+            i = 0
+
+            for field in fields:
+                if i > 0:
+                    _query += " OR "
+
+                _query += field + " LIKE '%%" + arg + "%%'"
+                #args_to_append.append(arg)
+                i = i + 1
+
+            _query += """)"""
+
+        count = len(list(Credit.objects.raw(_query, args_to_append)))
+        for credit in credits:
+            aaData.append([
+                '$%s' % str(credit.amount),
+                credit.cancel_reason,
+                credit.supposed_by,
+                credit.entity,
+                credit.sector,
+            ])
+
+    else:
+        credits = Credit.objects.all()
+        count = credits.count()
+
+        for credit in credits[start:end]:
+            aaData.append([
+                '$%s' % str(credit.amount),
+                credit.cancel_reason,
+                credit.supposed_by,
+                credit.entity,
+                credit.sector,
+            ])
+
+    data = {
+        'iTotalRecords': count,
+        'iDisplayStart': start,
+        'iDisplayLength': display_length,
+        'iTotalDisplayRecords': count,
+        'aaData':aaData
+    }
+    return HttpResponse(json.dumps(data))
 
 def graph(request):
     '''

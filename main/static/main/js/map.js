@@ -59,22 +59,25 @@ $(function() {
         state:state_names[state],
       },
       success: function(data) {
+        var values;
         $("#graph-tabs").tabs().show();
         if (data.response) {
-            var pie = new RGraph.Pie('cvs1', [data.total_moral,data.total_physic]);
+            $('#cvs1').hide();
+            var pie = new RGraph.Pie('cvs1', data.persons_type_values);
+            RGraph.Clear(pie.canvas);
             pie.Set('chart.origin', 0);
-            pie.Set('chart.tooltips', [data.total_moral,data.total_physic]);
-            pie.Set('chart.labels', ['Fisicas','Morales']);
+            pie.Set('chart.tooltips', data.persons_type);
             pie.Set('chart.shadow', true);            
             pie.Set('chart.background.piecolor1', 'white');
             pie.Set('chart.background.piecolor2', 'white');
             pie.Set('chart.background.grid', true);
-            pie.Set('chart.colors', ['orange', 'white']);
+            pie.Set('chart.colors', ['orange', 'white', 'red']);
             pie.Set('chart.text.color', 'white');
             pie.Set('chart.variant', '3d');
             pie.Draw();
-            var bar = new RGraph.Bar('cvs2', [5,4,1,6,8,5,3]);
-            bar.Set('chart.labels', ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']);
+            $('#cvs1').show();
+            var bar = new RGraph.Bar('cvs2', data.sectors_values);
+            bar.Set('chart.tooltips', data.sectors_name);
             bar.Draw();
             bar.Set('chart.background.barcolor1', 'white');
             bar.Set('chart.background.barcolor2', 'white');
@@ -83,9 +86,17 @@ $(function() {
             bar.Set('chart.text.color', 'white');
             bar.Set('chart.variant', '3d');
             bar.Draw();
-            var hbar = new RGraph.HBar('cvs3', [5,8,6,4,3,2,1,6,8]);
-            hbar.Set('chart.labels', ['Venus','Felicity','Cynthia','Frederick','Hoolio','Peter','Jennifer','Richard','Joathan']);
-            hbar.Draw();
+            var bar2 = new RGraph.Bar('cvs3', data.reasons_values);
+            bar2.Set('chart.tooltips', data.reasons_name);
+            bar2.Draw();
+            bar2.Set('chart.background.bar2color1', 'white');
+            bar2.Set('chart.background.bar2color2', 'white');
+            bar2.Set('chart.background.grid', true);
+            bar2.Set('chart.colors', ['orange', 'white']);
+            bar2.Set('chart.text.color', 'white');
+            bar2.Set('chart.variant', '3d');
+            bar2.Draw();
+
         }
       }
     });

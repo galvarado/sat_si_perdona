@@ -4,17 +4,17 @@ $(function() {
     "bJQueryUI": true,
     "sPaginationType": "full_numbers",
     "bProcessing": true,
-    "sAjaxSource": "search/get_credits",
+    "sAjaxSource": "get_credits_search",
     "bServerSide": true,
     "oLanguage": {
       "sUrl": STATIC_URL + "main/js/libs/dataTables.spanish.txt"
     },
     "aoColumns": [
-        { "sWidth": "25%" },
-        { "sWidth": "25%" },
-        { "sWidth": "15%" },
-        { "sWidth": "15%" },
-        { "sWidth": "15%" },
+        { "sWidth": "10%" },
+        { "sWidth": "10%" },
+        { "sWidth": "30%" },
+        { "sWidth": "10%" },
+        { "sWidth": "20%" },
     ],
     // Fill the table with ajax source
     "fnServerData": function ( sSource, aoData, fnCallback ) {

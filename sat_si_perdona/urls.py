@@ -15,6 +15,7 @@ urlpatterns = patterns('main.views',
     url(r'^manage/?$', 'manage', name='manage'),
     url(r'^change_db/?$', 'change_db', name='change_db'),
     url(r'^get_graph_by_state/?$', 'get_graph_by_state', name='get_graph_by_state'),
+    url(r'^get_credits_search/?$', 'get_credits_search', name='get_credits_search'),
     # Urls to django admin
     url(r'^admin/', include(admin.site.urls)),
     # Django registration
